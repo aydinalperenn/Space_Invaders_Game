@@ -16,7 +16,7 @@ public class AlienMaster : MonoBehaviour
     private const float MAX_LEFT = -13.30f;
     private const float MAX_RIGHT = 13.17f;
 
-    public static List<GameObject> allAliens = new List<GameObject>();  // alien list
+    //public static List<GameObject> allAliens = new List<GameObject>();  // alien list
 
     private bool isMovingRight;
     private float moveTimer = 0.01f;
@@ -45,7 +45,7 @@ public class AlienMaster : MonoBehaviour
     {
         foreach (GameObject go in GameObject.FindGameObjectsWithTag("Alien"))   // tüm düþmanlarý oyun baþý listeye ekliyor
         {
-            allAliens.Add(go);
+            Set.currentSet.Add(go);
         }
     }
 
@@ -91,7 +91,8 @@ public class AlienMaster : MonoBehaviour
 
     private void Shoot()
     {
-        Vector2 pos = allAliens[Random.Range(0, allAliens.Count)].transform.position;
+        //Vector2 pos = allAliens[Random.Range(0, allAliens.Count)].transform.position;
+        Vector2 pos = Set.currentSet[Random.Range(0, Set.currentSet.Count)].transform.position;
         //Instantiate(bulletPrefab, pos, Quaternion.identity);  // sürekli oluþturmak yerine pool içerisinden çekeceðiz
         GameObject obj = objectPool.GetPooledObject();
         obj.transform.position = pos;
@@ -101,20 +102,20 @@ public class AlienMaster : MonoBehaviour
     private void MoveEnemies()
     {
         int hitMax = 0;     // maks noktaya geldiðimizi kontrol etmek için
-        if (allAliens.Count > 0) // düþmanlarýmýz varsa
+        if (Set.currentSet.Count > 0) // düþmanlarýmýz varsa
         {
-            for (int i = 0; i < allAliens.Count; i++)
+            for (int i = 0; i < Set.currentSet.Count; i++)
             {
                 if (isMovingRight)  // saða gidiyorsa
                 {
-                    allAliens[i].transform.position += hMoveDistance;
+                    Set.currentSet[i].transform.position += hMoveDistance;
                 }
                 else    // sola gidiyorsa
                 {
-                    allAliens[i].transform.position -= hMoveDistance;
+                    Set.currentSet[i].transform.position -= hMoveDistance;
                 }
 
-                if (allAliens[i].transform.position.x > MAX_RIGHT || allAliens[i].transform.position.x < MAX_LEFT)  // maks noktalar arasýndaysa
+                if (Set.currentSet[i].transform.position.x > MAX_RIGHT || Set.currentSet[i].transform.position.x < MAX_LEFT)  // maks noktalar arasýndaysa
                 {
                     hitMax++;
                 }
@@ -123,9 +124,9 @@ public class AlienMaster : MonoBehaviour
 
             if (hitMax > 0) // maks noktanýn üzerine çýkarsa (enlemesine oyun sahnesinin) bir alta insin
             {
-                for (int i = 0; i < allAliens.Count; i++)
+                for (int i = 0; i < Set.currentSet.Count; i++)
                 {
-                    allAliens[i].transform.position -= vMoveDistance;
+                    Set.currentSet[i].transform.position -= vMoveDistance;
                 }
                 isMovingRight = !isMovingRight;
             }
@@ -135,7 +136,7 @@ public class AlienMaster : MonoBehaviour
 
     private float getMoveSpeed()    // düþman sayýsý azaldýkça hýzlanmasý lazým
     {
-        float f = allAliens.Count * moveTime;
+        float f = Set.currentSet.Count * moveTime;
 
         if (f < MAX_MOVE_SPEED)     
         {

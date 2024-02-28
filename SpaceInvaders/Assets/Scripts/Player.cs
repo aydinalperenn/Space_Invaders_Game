@@ -29,6 +29,13 @@ public class Player : MonoBehaviour
     public int highscore;
 
 
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip shootClip;
+
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     private void Start()
     {
@@ -97,6 +104,7 @@ public class Player : MonoBehaviour
     private IEnumerator Shoot() // ateþ etme fonksiyonu
     {
         isShooting = true;
+        audioSource.PlayOneShot(shootClip);
         //Instantiate(bulletPrefab, transform.position, Quaternion.identity); // mermi oluþturma    //  bu kod sürekli oluþturmak için, aþaðýdaki daha optimize
         GameObject obj = objectPool.GetPooledObject();  // havuzdaki  objeyi çekti
         obj.transform.position = gameObject.transform.position;
@@ -144,6 +152,7 @@ public class Player : MonoBehaviour
                 {
                     PlayerPrefs.SetInt("HIGHSCORE", highscore);
                 }
+                Set.currentSet.Clear();
                 SceneManager.LoadScene(0);
                 
             }

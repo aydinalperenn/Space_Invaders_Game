@@ -25,16 +25,16 @@ public class IsEnemyCollision : MonoBehaviour
     {
         if (collision.CompareTag("Alien"))
         {
-            AlienMaster.allAliens.Remove(collision.gameObject);
+            Set.currentSet.Remove(collision.gameObject);
             collision.gameObject.SetActive(false);
             player.TakeDamage();
         }
-        if (AlienMaster.allAliens.Count == 0)
+        if (Set.currentSet.Count == 0)
         {
             GameManager.SpawnNewWave();
         }
 
-        
+
 
     }
 }

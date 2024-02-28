@@ -7,6 +7,7 @@ public class PickupCoin : Pickup
     public override void pickMeUp()
     {
         Inventory.currentCoins++;
+        PlayerPrefs.SetInt("Coin", Inventory.currentCoins);
         UIManager.updateCoins();
         gameObject.SetActive(false);
     }

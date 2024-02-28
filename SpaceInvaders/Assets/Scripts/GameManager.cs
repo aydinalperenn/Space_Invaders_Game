@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance;
 
+    public static int highscore;
+
+
     private void Awake()
     {
         if (instance == null)
@@ -25,11 +28,21 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        Inventory.currentCoins = PlayerPrefs.GetInt("Coin", 0);
+        UIManager.updateCoins();
         SpawnNewWave();
     }
 
     public static void SpawnNewWave()
     {
+        int.TryParse(UIManager.instance.scoreText.text, out highscore);
+        if (PlayerPrefs.GetInt("HIGHSCORE", 0) < highscore)
+        {
+            UIManager.instance.highScoreText.text = highscore.ToString();
+            Debug.Log("Girdi");
+        }
+
+
         instance.StartCoroutine(instance.SpawnWave());
     }
 

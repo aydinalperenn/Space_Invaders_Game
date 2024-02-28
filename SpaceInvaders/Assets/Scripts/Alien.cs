@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Alien : MonoBehaviour
 {
@@ -14,10 +15,12 @@ public class Alien : MonoBehaviour
     private const int HEALTH_CHANCE = 30;
     private const int COIN_CHANCE = 300;
 
+
     public void Kill()
     {
         UIManager.UpdateScore(scoreValue);
-        AlienMaster.allAliens.Remove(gameObject);
+        //AlienMaster.allAliens.Remove(gameObject);
+        Set.currentSet.Remove(gameObject);
         Instantiate(explosion, transform.position, Quaternion.identity);
 
         int ran = Random.Range(0, 1000);
@@ -34,10 +37,17 @@ public class Alien : MonoBehaviour
             Instantiate(coinPrefab, transform.position, Quaternion.identity);
         }
 
-        if(AlienMaster.allAliens.Count == 0)
+        if (Set.currentSet.Count == 0)
         {
+            
+
             GameManager.SpawnNewWave();
         }
+
+        //if(AlienMaster.allAliens.Count == 0)
+        //{
+        //    GameManager.SpawnNewWave();
+        //}
 
         gameObject.SetActive(false);
     }
