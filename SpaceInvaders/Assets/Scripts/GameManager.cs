@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
 
     public static int highscore;
 
+    public static bool isSpawned;
 
     private void Awake()
     {
@@ -42,18 +43,39 @@ public class GameManager : MonoBehaviour
             Debug.Log("Girdi");
         }
 
-
-        instance.StartCoroutine(instance.SpawnWave());
+        if(instance != null)
+        {
+            instance.StartCoroutine(instance.SpawnWave());
+        }
+        else
+        {
+            SpawnNewWave();
+        }
     }
 
     private IEnumerator SpawnWave()
     {
-        if(currentSet != null)
+        if (isSpawned)
         {
-            Destroy(currentSet);
+            yield return null;
         }
-        yield return new WaitForSeconds(2);
-        currentSet = Instantiate(allAlienSets[Random.Range(0, allAlienSets.Length)], spawnPos, Quaternion.identity);
-        UIManager.UpdateWave();
+        else
+        {
+            isSpawned = true;
+            Set.currentSet.Clear();
+            if (currentSet != null)
+            {
+                Destroy(currentSet);
+            }
+            yield return new WaitForSeconds(2);
+            currentSet = Instantiate(allAlienSets[Random.Range(0, allAlienSets.Length)], spawnPos, Quaternion.identity);
+            UIManager.UpdateWave();
+            for(int i = 0; i<currentSet.transform.childCount; i++)
+            {
+                Set.currentSet.Add(currentSet.transform.GetChild(i).gameObject);
+            }
+            isSpawned = false;
+        }
+        
     }
 }

@@ -32,6 +32,8 @@ public class Player : MonoBehaviour
     private AudioSource audioSource;
     [SerializeField] private AudioClip shootClip;
 
+    bool canTakeDamage = true;
+
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
@@ -52,21 +54,28 @@ public class Player : MonoBehaviour
     {
         // saða sola kontrol
 #if UNITY_EDITOR
-        if (Input.GetKey(KeyCode.A) && transform.position.x > minX)
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
-            transform.Translate(Vector2.left * Time.deltaTime * shipStats.shipSpeed);
-
+            if(transform.position.x > minX)
+            {
+                transform.Translate(Vector2.left * Time.deltaTime * shipStats.shipSpeed);
+            }
         }
-        if (Input.GetKey(KeyCode.D) && transform.position.x < maxX)
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
-            transform.Translate(Vector2.right * Time.deltaTime * shipStats.shipSpeed);
-
+            if(transform.position.x < maxX)
+            {
+                transform.Translate(Vector2.right * Time.deltaTime * shipStats.shipSpeed);
+            }
         }
 
         // Ateþ etme
-        if (Input.GetKey(KeyCode.Space) && !isShooting)
+        if (Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0))
         {
-            StartCoroutine(Shoot());
+            if (!isShooting)
+            {
+                StartCoroutine(Shoot());
+            }
         }
 #endif
         
@@ -115,13 +124,19 @@ public class Player : MonoBehaviour
 
     private IEnumerator Respawn()   // respawn fonk.
     {
-        transform.position = offScreenPos;  // gemiyi dýþarý alýcaz
+        if (canTakeDamage)
+        {
+            canTakeDamage = false;
+            transform.position = offScreenPos;  // gemiyi dýþarý alýcaz
 
-        yield return new WaitForSeconds(2);     // 2 sn beklesin
-        shipStats.currentHealth = shipStats.maxHealth;  // respawn olduðunda saðlýðýný yeniden 3 yapsýn (maks health yapsýn)
-        transform.position = startPos;      // gemiyi geri oyun alanýna aldýk
+            yield return new WaitForSeconds(2);     // 2 sn beklesin
+            shipStats.currentHealth = shipStats.maxHealth;  // respawn olduðunda saðlýðýný yeniden 3 yapsýn (maks health yapsýn)
+            transform.position = startPos;      // gemiyi geri oyun alanýna aldýk
 
-        UIManager.UpdateHealthBar(shipStats.currentHealth);     // uý güncellemesi 
+            UIManager.UpdateHealthBar(shipStats.currentHealth);     // uý güncellemesi 
+            canTakeDamage = true;
+        }
+        
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

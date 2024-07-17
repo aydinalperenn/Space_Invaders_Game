@@ -29,7 +29,7 @@ public class IsEnemyCollision : MonoBehaviour
             collision.gameObject.SetActive(false);
             player.TakeDamage();
         }
-        if (Set.currentSet.Count == 0)
+        if (Set.currentSet.Count <= 0)
         {
             GameManager.SpawnNewWave();
         }

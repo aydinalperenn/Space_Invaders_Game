@@ -37,10 +37,8 @@ public class Alien : MonoBehaviour
             Instantiate(coinPrefab, transform.position, Quaternion.identity);
         }
 
-        if (Set.currentSet.Count == 0)
+        if (Set.currentSet.Count <= 0)
         {
-            
-
             GameManager.SpawnNewWave();
         }
 

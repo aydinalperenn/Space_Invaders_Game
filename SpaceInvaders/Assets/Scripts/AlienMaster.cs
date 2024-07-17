@@ -38,7 +38,10 @@ public class AlienMaster : MonoBehaviour
     // GameManager scripti üzerinden alien set spawný için gereken koordinatlar
     private const float START_Y = -2.1f;
     private bool entering = true;
-    
+
+
+    private bool isGoingDown;
+    private bool canGoDown;
     
 
     void Start()
@@ -118,20 +121,42 @@ public class AlienMaster : MonoBehaviour
                 if (Set.currentSet[i].transform.position.x > MAX_RIGHT || Set.currentSet[i].transform.position.x < MAX_LEFT)  // maks noktalar arasýndaysa
                 {
                     hitMax++;
+
+                    if (!isGoingDown)
+                    {
+                        canGoDown = true;
+                    }
                 }
 
             }
 
             if (hitMax > 0) // maks noktanýn üzerine çýkarsa (enlemesine oyun sahnesinin) bir alta insin
             {
-                for (int i = 0; i < Set.currentSet.Count; i++)
+                if (canGoDown)
                 {
-                    Set.currentSet[i].transform.position -= vMoveDistance;
+                    if (!isGoingDown)
+                    {
+                        isGoingDown = true;
+                        for (int i = 0; i < Set.currentSet.Count; i++)
+                        {
+                            Set.currentSet[i].transform.position -= vMoveDistance;
+                        }
+                        isMovingRight = !isMovingRight;
+                        StartCoroutine(CoolDown());
+                    }
+                    
                 }
-                isMovingRight = !isMovingRight;
+                
             }
             moveTimer = getMoveSpeed();
         }
+    }
+
+    private IEnumerator CoolDown()
+    {
+        yield return new WaitForSeconds(1.5f);
+        isGoingDown = false;
+        canGoDown = false;
     }
 
     private float getMoveSpeed()    // düþman sayýsý azaldýkça hýzlanmasý lazým
