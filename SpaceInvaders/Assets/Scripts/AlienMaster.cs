@@ -46,10 +46,10 @@ public class AlienMaster : MonoBehaviour
 
     void Start()
     {
-        foreach (GameObject go in GameObject.FindGameObjectsWithTag("Alien"))   // tüm düþmanlarý oyun baþý listeye ekliyor
-        {
-            Set.currentSet.Add(go);
-        }
+        //foreach (GameObject go in GameObject.FindGameObjectsWithTag("Alien"))   // tüm düþmanlarý oyun baþý listeye ekliyor
+        //{
+        //    Set.currentSet.Add(go);
+        //}
     }
 
 

@@ -15,6 +15,12 @@ public class GameManager : MonoBehaviour
 
     public static bool isSpawned;
 
+    public static void ResetGameManager()
+    {
+        isSpawned = false;
+    }
+
+
     private void Awake()
     {
         if (instance == null)
